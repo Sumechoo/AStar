@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import "./styles.css";
 import { PointButton } from "./components/PointButton";
-import { ControlPanel } from "./components/ControlPanel";
 import { AppState, Action, Vector2 } from "./types";
 
 export enum TileType {
