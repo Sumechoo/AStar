@@ -1,2 +1,0 @@
-# AStar
-Created with CodeSandbox
