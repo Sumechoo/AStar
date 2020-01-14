@@ -1,6 +1,19 @@
-import { Vector2, NeighborsList } from "./types";
+import { Vector2, NeighborsList, TileInfo } from "./types";
+import { TileType } from "./App";
 
 const BASE = 10;
+
+export function buildTileInfo(
+  point: Vector2,
+  type: TileType,
+  cameFrom?: TileInfo
+): TileInfo {
+  return {
+    type,
+    cameFrom,
+    index: pointToIndex(point)
+  };
+}
 
 export const pointToIndex = (point: Vector2): number => {
   if (isPointBad(point)) {

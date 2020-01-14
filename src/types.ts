@@ -15,8 +15,12 @@ export enum Direction {
 export interface Vector2 {
   x: number;
   y: number;
+}
 
-  cameFrom?: Vector2;
+export interface TileInfo {
+  type: TileType;
+  index: number;
+  cameFrom?: TileInfo;
 }
 
 export interface NeighborsList<T> {
@@ -28,7 +32,7 @@ export interface NeighborsList<T> {
 
 export interface AppState {
   currentAction?: Action;
-  data: Array<TileType>;
+  data: Array<TileInfo>;
   currentBounds: Array<Vector2>;
   currentTouched: Array<Vector2>;
 }

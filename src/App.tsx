@@ -1,8 +1,13 @@
 import React, { useState, useCallback } from "react";
 import "./styles.css";
 import { PointButton } from "./components/PointButton";
-import { AppState, Action, Vector2 } from "./types";
-import { pointToIndex, indexToPoint, getNeighborsArray } from "./utils";
+import { AppState, Action, Vector2, TileInfo } from "./types";
+import {
+  pointToIndex,
+  indexToPoint,
+  getNeighborsArray,
+  buildTileInfo
+} from "./utils";
 
 export enum TileType {
   WALL = "WALL",
@@ -19,15 +24,18 @@ const blockedTypes: Array<TileType> = [
   TileType.END
 ];
 
-const state: TileType[] = [];
+const state: TileInfo[] = [];
 state.length = 100;
-state.fill(TileType.EMPTY);
+state.fill({
+  type: TileType.EMPTY,
+  index: -1
+});
 
-const startPoint: Vector2 = { x: 3, y: 3 };
-const endPoint: Vector2 = { x: 7, y: 7 };
+const startPoint: Vector2 = { x: 0, y: 0 };
+const endPoint: Vector2 = { x: 9, y: 7 };
 
-state[pointToIndex(startPoint)] = TileType.START;
-state[pointToIndex(endPoint)] = TileType.END;
+state[pointToIndex(startPoint)] = buildTileInfo(startPoint, TileType.START);
+state[pointToIndex(endPoint)] = buildTileInfo(endPoint, TileType.END);
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>({
@@ -38,13 +46,13 @@ export default function App() {
   });
 
   const setTile = useCallback(
-    (p: Vector2, t: TileType = TileType.WALL) => {
+    (p: Vector2, t: TileType = TileType.WALL, cameFrom?: TileInfo) => {
       const oldData = appState.data;
       const targetIndex = pointToIndex(p);
       const oldType = oldData[targetIndex];
 
-      if (!blockedTypes.includes(oldType)) {
-        oldData[targetIndex] = t;
+      if (oldType && !blockedTypes.includes(oldType.type)) {
+        oldData[targetIndex] = buildTileInfo(p, t, cameFrom);
       }
 
       setAppState({
@@ -68,9 +76,13 @@ export default function App() {
       const boundsNeighbors = getNeighborsArray(point);
       boundsNeighbors.forEach(neighbor => {
         const nIndex = pointToIndex(neighbor);
-        const nType = appState.data[pointToIndex(neighbor)];
+        const nInfo = appState.data[pointToIndex(neighbor)];
 
-        if (nType === TileType.EMPTY && !newBoundsIndexes.includes(nIndex)) {
+        if (
+          nInfo &&
+          nInfo.type === TileType.EMPTY &&
+          !newBoundsIndexes.includes(nIndex)
+        ) {
           newBoundsIndexes.push(nIndex);
         }
       });
@@ -85,7 +97,7 @@ export default function App() {
 
   return (
     <>
-      {appState.data.map((type, index) => {
+      {appState.data.map((info, index) => {
         const pointRef: Vector2 = indexToPoint(index);
 
         return (
@@ -93,7 +105,7 @@ export default function App() {
             <PointButton
               setTile={setTile}
               key={index}
-              type={type}
+              info={info}
               appState={appState}
               point={pointRef}
             />
@@ -101,7 +113,7 @@ export default function App() {
           </>
         );
       })}
-      <button onClick={aStar}>Calculate path iteration</button>
+      <button onClick={aStar}>Next iteration step</button>
     </>
   );
 }
