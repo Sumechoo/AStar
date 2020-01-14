@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import "./styles.css";
 import { PointButton } from "./components/PointButton";
 import { AppState, Action, Vector2 } from "./types";
+import { pointToIndex } from "./utils";
 
 export enum TileType {
   WALL = "WALL",
@@ -15,8 +16,8 @@ const state: TileType[] = [];
 state.length = 100;
 state.fill(TileType.EMPTY);
 
-state[25] = TileType.START;
-state[88] = TileType.END;
+state[pointToIndex({ x: 0, y: 0 })] = TileType.START;
+state[pointToIndex({ x: 7, y: 7 })] = TileType.END;
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>({
@@ -27,7 +28,7 @@ export default function App() {
   const setTile = useCallback(
     (p: Vector2, t: TileType = TileType.WALL) => {
       const oldData = appState.data;
-      const targetIndex = p.y * 10 + p.x;
+      const targetIndex = pointToIndex(p);
 
       oldData[targetIndex] = t;
 

@@ -1,6 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { TileType } from "../App";
-import { AppState, Vector2 } from "../types";
+import { AppState, Vector2, Direction } from "../types";
+import { getNeighbors } from "../utils";
+import { Arrow } from "./Arrow";
 
 const TypeColorMap: Record<TileType, string> = {
   WALL: "grey",
@@ -19,9 +21,15 @@ interface Props {
 
 export const PointButton: React.FC<Props> = props => {
   const { type, setTile, point } = props;
+  const neighbors = useMemo(() => getNeighbors(point), [point]);
   const onClickHandler = useCallback(() => {
     setTile(point, type === TileType.WALL ? TileType.EMPTY : TileType.WALL);
-  }, [point, setTile, type]);
+
+    setTile(
+      neighbors.left,
+      type === TileType.WALL ? TileType.EMPTY : TileType.TOUCHED
+    );
+  }, [point, setTile, type, neighbors]);
 
   return (
     <button
@@ -31,6 +39,12 @@ export const PointButton: React.FC<Props> = props => {
         width: 30,
         height: 30
       }}
-    />
+    >
+      {type === TileType.TOUCHED ? (
+        <Arrow direction={Direction.TOP} />
+      ) : (
+        <div />
+      )}
+    </button>
   );
 };
