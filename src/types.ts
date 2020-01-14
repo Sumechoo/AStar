@@ -15,6 +15,8 @@ export enum Direction {
 export interface Vector2 {
   x: number;
   y: number;
+
+  cameFrom?: Vector2;
 }
 
 export interface NeighborsList<T> {
@@ -27,7 +29,6 @@ export interface NeighborsList<T> {
 export interface AppState {
   currentAction?: Action;
   data: Array<TileType>;
-
-  startPosition?: Vector2;
-  endPosition?: Vector2;
+  currentBounds: Array<Vector2>;
+  currentTouched: Array<Vector2>;
 }

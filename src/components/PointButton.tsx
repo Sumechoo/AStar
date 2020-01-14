@@ -9,7 +9,8 @@ const TypeColorMap: Record<TileType, string> = {
   START: "lightblue",
   END: "red",
   EMPTY: "white",
-  TOUCHED: "pink"
+  TOUCHED: "pink",
+  BOUND: "blue"
 };
 
 interface Props {
@@ -21,15 +22,9 @@ interface Props {
 
 export const PointButton: React.FC<Props> = props => {
   const { type, setTile, point } = props;
-  const neighbors = useMemo(() => getNeighbors(point), [point]);
   const onClickHandler = useCallback(() => {
     setTile(point, type === TileType.WALL ? TileType.EMPTY : TileType.WALL);
-
-    setTile(
-      neighbors.left,
-      type === TileType.WALL ? TileType.EMPTY : TileType.TOUCHED
-    );
-  }, [point, setTile, type, neighbors]);
+  }, [point, setTile, type]);
 
   return (
     <button

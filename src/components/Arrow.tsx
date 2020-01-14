@@ -18,6 +18,7 @@ export const Arrow: React.FC<Props> = props => {
   return (
     <div
       style={{
+        position: "absolute",
         transform: `rotate(${directionToAngle[direction]}deg)`
       }}
     >
