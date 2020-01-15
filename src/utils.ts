@@ -6,11 +6,11 @@ const BASE = 10;
 export function buildTileInfo(
   point: Vector2,
   type: TileType,
-  cameFrom?: TileInfo
+  cameFromIndex?: number
 ): TileInfo {
   return {
     type,
-    cameFrom,
+    cameFromIndex,
     index: pointToIndex(point)
   };
 }

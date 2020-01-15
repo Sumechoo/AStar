@@ -20,7 +20,7 @@ export interface Vector2 {
 export interface TileInfo {
   type: TileType;
   index: number;
-  cameFrom?: TileInfo;
+  cameFromIndex?: number;
 }
 
 export interface NeighborsList<T> {

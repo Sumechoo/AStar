@@ -9,7 +9,8 @@ const TypeColorMap: Record<TileType, string> = {
   END: "red",
   EMPTY: "white",
   TOUCHED: "pink",
-  BOUND: "blue"
+  BOUND: "blue",
+  PATH: "orange"
 };
 
 interface Props {
