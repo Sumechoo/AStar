@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import "./styles.css";
 import { PointButton } from "./components/PointButton";
 import { AppState, Action, Vector2, TileInfo } from "./types";
@@ -43,6 +43,8 @@ state[endIndex] = buildTileInfo(endPoint, TileType.END);
 
 export default function App() {
   const [appState, setAppState] = useState<AppState>({
+    isPathFound: false,
+    isCalculationAllowed: false,
     currentAction: Action.SET_START,
     data: state,
     currentTouched: [startPoint],
@@ -91,7 +93,7 @@ export default function App() {
 
   const aStar = useCallback(() => {
     // console.time("iteration");
-
+    let isPathFound = appState.isPathFound;
     const { currentTouched, currentBounds } = appState;
 
     const pathParts: Record<number, number> = {};
@@ -123,6 +125,7 @@ export default function App() {
     newBoundsIndexes.forEach(boundIndex => {
       if (boundIndex === endIndex) {
         collectPath(pathParts[boundIndex]);
+        isPathFound = true;
       } else {
         setTile(
           indexToPoint(boundIndex),
@@ -134,12 +137,26 @@ export default function App() {
 
     setAppState({
       ...appState,
+      isPathFound,
       currentTouched: newTouched,
       currentBounds: newBoundsIndexes.map(index => indexToPoint(index))
     });
 
     // console.timeEnd("iteration");
   }, [setTile, appState, setAppState, collectPath]);
+
+  useEffect(() => {
+    if (!appState.isPathFound && appState.isCalculationAllowed) {
+      aStar();
+    }
+  }, [appState, aStar]);
+
+  const calculate = useCallback(() => {
+    setAppState({
+      ...appState,
+      isCalculationAllowed: true
+    });
+  }, [appState]);
 
   const showData = useCallback(() => {
     console.warn("APP STATE", appState.data);
@@ -159,12 +176,11 @@ export default function App() {
               appState={appState}
               point={pointRef}
             />
-            {pointRef.x === 9 && <br />}
+            {pointRef.x === 9 && <br key={"br" + index} />}
           </>
         );
       })}
-      <button onClick={aStar}>Next iteration step</button>
-      <button onClick={showData}>Show data</button>
+      <button onClick={calculate}>Calculate path</button>
     </>
   );
 }

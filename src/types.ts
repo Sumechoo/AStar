@@ -31,6 +31,8 @@ export interface NeighborsList<T> {
 }
 
 export interface AppState {
+  isPathFound: boolean;
+  isCalculationAllowed: boolean;
   currentAction?: Action;
   data: Array<TileInfo>;
   currentBounds: Array<Vector2>;

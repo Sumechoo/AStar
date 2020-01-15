@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { TileType } from "../App";
-import { AppState, Vector2, Direction, TileInfo } from "../types";
-import { Arrow } from "./Arrow";
+import { AppState, Vector2, TileInfo } from "../types";
 
 const TypeColorMap: Record<TileType, string> = {
   WALL: "grey",
@@ -37,12 +36,6 @@ export const PointButton: React.FC<Props> = props => {
         width: 30,
         height: 30
       }}
-    >
-      {info.type === TileType.TOUCHED ? (
-        <Arrow direction={Direction.TOP} />
-      ) : (
-        <div />
-      )}
-    </button>
+    />
   );
 };
