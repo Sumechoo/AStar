@@ -146,7 +146,11 @@ export default function App() {
   }, [setTile, appState, setAppState, collectPath]);
 
   useEffect(() => {
-    if (!appState.isPathFound && appState.isCalculationAllowed) {
+    if (
+      !appState.isPathFound &&
+      appState.currentBounds.length > 0 &&
+      appState.isCalculationAllowed
+    ) {
       aStar();
     }
   }, [appState, aStar]);
